@@ -1,0 +1,30 @@
+{
+  "name": "inktober",
+  "version": "0.0.0",
+  "description": "An unoffical image board of inktober drawings",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sugendran/inktober.git"
+  },
+  "author": "Sugendran Ganess",
+  "license": "MIT",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/sugendran/inktober/issues"
+  },
+  "homepage": "https://github.com/sugendran/inktober",
+  "dependencies": {
+    "azure-storage": "^0.3.3",
+    "good": "^2.3.0",
+    "hapi": "^6.8.1",
+    "node-uuid": "^1.4.1",
+    "request": "^2.42.0",
+    "tuiter": "^0.2.12",
+    "underscore": "^1.7.0"
+  }
+}
