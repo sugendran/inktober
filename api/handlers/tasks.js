@@ -1,5 +1,5 @@
 var Task = require('../../models/task');
-var TABLE_NAME = 'tasks';
+var TABLE_NAME = 'devtasks';
 module.exports = function (tableSvc, azure) {
   var entityGenerator = azure.TableUtilities.entityGenerator;
   return {

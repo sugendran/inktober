@@ -1,3 +1,5 @@
+var Task = require('../models/task');
+var taskUtils = require('./task-util');
 var tu;
 var terms = ['inktober'];
 // jake parker = 13205002
@@ -7,9 +9,10 @@ var now = new Date();
 var startDate = Date.UTC(now.getFullYear(), 8, 31);
 var endDate = Date.UTC(now.getFullYear(), 10, 1);
 
+
 // only keep the values for the last hour
 setInterval(function () {
-  var now = Date.now();
+  var now = Date.now() - 60 * 60 * 1000;
   lastRetweets = lastRetweets.filter(function (val) { return val >= now; });
 }, 1000);
 
@@ -44,7 +47,7 @@ module.exports.init = function (plugin) {
     } catch (e) {
 
     }
-    if ((canRetweetAlways.indexOf(tweet.id_str) !== -1) || (date && date < endDate && date > startDate)) {
+    if ((canRetweetAlways.indexOf(tweet.id_str) !== -1) || (date && date <= endDate && date >= startDate)) {
       lastRetweets.push(Date.now());
       // console.log("Retweeting: " + tweet.text);
       // note we're using the id_str property since
@@ -54,13 +57,19 @@ module.exports.init = function (plugin) {
       }, onReTweet);
     }
 
+    var task = new Task({
+      source: "twitter",
+      sourceId: tweet.id_str,
+      payload: tweet
+    });
+    taskUtils.saveTask('http://127.0.0.1:' + plugin.app.config.ports.api, task);
   }
 
 
   tu.filter({
       track: terms
   }, function(stream) {
-      plugin.log('log', 'listening to twitter stream');
+      plugin.log(['plugin', 'info'], 'listening to twitter stream');
       stream.on('tweet', onTweet);
   });
 };

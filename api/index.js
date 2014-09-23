@@ -59,7 +59,7 @@ exports.register = function (plugin, options, next) {
     handler: taskHandlers.update
   });
 
-  tableSvc.createTableIfNotExists('tasks', function(error){
+  tableSvc.createTableIfNotExists('devtasks', function(error){
     if (error) {
       return next(error);
     }

@@ -1,14 +1,23 @@
 var twitter = require('./twitter');
+var flickr = require('./flickr');
+var twitterProcessor = require('./twitter-processor');
 
 exports.register = function (plugin, options, next) {
-  twitter.init(plugin);
+  if (plugin.app.config.enableBots) {
+    plugin.log(['log'], 'Starting bots');
+    twitter.init(plugin);
+    flickr.init(plugin);
+  }
+  twitterProcessor.init(plugin);
 
   plugin.route({
     path: '/health',
     method: 'GET',
     handler: function (request, reply) {
       reply({
-        twitter: twitter.health()
+        flickr: flickr.health(),
+        twitter: twitter.health(),
+        twitterProcessor: twitterProcessor.health()
       });
     }
   });

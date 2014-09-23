@@ -6,6 +6,7 @@ function Task (attributes) {
     id: uuid.v1(),
     created: Date.now(),
     source: null,
+    sourceId: null,
     url: null,
     payload: null,
     status: "pending",
@@ -21,7 +22,7 @@ Task.prototype.toEntity = function (entityGenerator) {
     status: entityGenerator.String(this.status),
     source: entityGenerator.String(this.source),
     url: entityGenerator.String(this.url),
-    payload: entityGenerator.String(this.payload),
+    payload: entityGenerator.String(JSON.stringify(this.payload)),
     started: entityGenerator.Int64(this.started)
   };
   return result;
@@ -33,7 +34,8 @@ Task.fromEntity = function (entity) {
     created: entity.created._,
     status: entity.status._,
     source: entity.source._,
-    started: entity.started._
+    started: entity.started._,
+    payload: JSON.parse(entity.payload._)
   };
   return new Task(obj);
 };
