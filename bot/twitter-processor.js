@@ -45,7 +45,7 @@ module.exports.init = function (plugin) {
     if (error) { plugin.log(['error', error.message]); }
     setTimeout(next, 50);
   });
-  setTimeout(next, 10000);
+  setTimeout(next, 1000);
 };
 
 module.exports.health = function () {
