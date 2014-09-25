@@ -1,9 +1,9 @@
 var Post = require('../../models/post');
 function startDateFromYear(year) {
-  return Date.UTC(year, 8, 31);
+  return Date.UTC(year, 8, 1);
 }
 function endDateFromYear(year) {
-  return Date.UTC(year, 10, 1);
+  return Date.UTC(year, 10, 30);
 }
 var thisYear = (new Date()).getFullYear();
 

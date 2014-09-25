@@ -25,6 +25,7 @@ function GetNextItem (plugin, done) {
     var obj = JSON.parse(body);
     if (obj.length) {
       var task = new Task(obj[0]);
+      processed.push(new Date());
       // only care about things with links
       if (task.payload.entities.urls.length < 1) {
         return taskUtils.failTask(API_URL, task, done);
