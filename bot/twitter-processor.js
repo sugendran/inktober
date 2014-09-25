@@ -12,7 +12,7 @@ setInterval(function () {
 function GetNextItem (plugin, done) {
   var API_URL = 'http://127.0.0.1:' + plugin.app.config.ports.api;
   request({
-    url: API_URL + '/task?source=twitter&limit=1',
+    url: API_URL + '/task?source=twitter&limit=1&pending=true',
     method: 'GET',
     headers: {
       "Content-type": "application/json"
@@ -26,11 +26,11 @@ function GetNextItem (plugin, done) {
     if (obj.length) {
       var task = new Task(obj[0]);
       // only care about things with links
-      if (task.payload.entities.url.length !== 1) {
+      if (task.payload.entities.urls.length < 1) {
         return taskUtils.failTask(API_URL, task, done);
       }
-      var url = task.payload.entities.url[0];
-      taskUtils.extractPost(plugin.app.config.embedly, API_URL, url, function (error) {
+      var url = task.payload.entities.urls[0];
+      taskUtils.extractPost(plugin.app.config.embedly, API_URL, url.expanded_url || url.url, function (error) {
         if (error) {
           return taskUtils.failTask(API_URL, task, done);
         }
@@ -41,10 +41,11 @@ function GetNextItem (plugin, done) {
 }
 
 module.exports.init = function (plugin) {
-  var next = GetNextItem.bind(null, plugin, function () {
+  var next = GetNextItem.bind(null, plugin, function (error) {
+    if (error) { plugin.log(['error', error.message]); }
     setTimeout(next, 50);
   });
-  setTimeout(next, 1000);
+  setTimeout(next, 10000);
 };
 
 module.exports.health = function () {

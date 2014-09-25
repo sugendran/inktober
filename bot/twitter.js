@@ -1,5 +1,5 @@
 var Task = require('../models/task');
-var taskUtils = require('./task-util');
+var taskUtils = require('./task-utils');
 var tu;
 var terms = ['inktober'];
 // jake parker = 13205002

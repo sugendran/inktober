@@ -70,10 +70,24 @@ function checkIfProcessed(API_URL, url, done) {
   });
 }
 
+function checkIfExists(API_URL, url, done) {
+  request({
+    url: API_URL + '/post?url=' + encodeURIComponent(url),
+    method: 'GET',
+    headers: {
+      "Content-type": "application/json"
+    }
+  }, function (err, resp, body) {
+    if (err) { return done(err); }
+    var obj = JSON.parse(body);
+    if (obj.length) { return done(new Error("URL was already processed")); }
+    done();
+  });
+}
+
 function extractPost (EMBEDLY_KEY, API_URL, url, done) {
   checkIfProcessed(API_URL, url, function (err) {
     if (err) { return done(err); }
-
     var embedlyUrl = "http://api.embed.ly/1/extract?key=" + EMBEDLY_KEY + "&url=" + encodeURIComponent(url) + "&format=json";
     request({
       url: embedlyUrl,
@@ -81,14 +95,20 @@ function extractPost (EMBEDLY_KEY, API_URL, url, done) {
     }, function (error, resp, body) {
       if (error) { return done(error); }
       var details = JSON.parse(body);
-      var photo = _.findWhere(details.media, { type: 'photo' });
+      var photo = _.isArray(details.media) ? _.findWhere(details.media, { type: 'photo' }) : details.media;
       if (!photo) { return done(); }
+      if (!photo.url) { return done(); }
       var post = new Post(photo);
-      post.published = details.published;
+      if (details.published) {
+        post.published = details.published;
+      }
       post.title = details.title;
       post.author = details.provider_display;
       post.link = details.url;
-      savePost(API_URL, post, done);
+      checkIfExists(API_URL, post.url, function (err) {
+        if (err) { return done(err); }
+        savePost(API_URL, post, done);
+      });
     });
   });
 }

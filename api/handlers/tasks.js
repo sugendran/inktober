@@ -1,6 +1,6 @@
 var Task = require('../../models/task');
-var TABLE_NAME = 'devtasks';
-module.exports = function (tableSvc, azure) {
+
+module.exports = function (tableSvc, azure, TABLE_NAME) {
   var entityGenerator = azure.TableUtilities.entityGenerator;
   return {
     list: function (request, reply) {
@@ -54,8 +54,8 @@ module.exports = function (tableSvc, azure) {
     },
     update: function (request, reply) {
       var id = request.params.id;
-      var source = request.params.source;
-      var status = request.params.status;
+      var source = request.payload.source;
+      var status = request.payload.status;
       if (status !== 'completed' && status !== 'failed') {
         return reply(new Error('Invalid status'));
       }

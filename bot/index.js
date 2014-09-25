@@ -8,7 +8,10 @@ exports.register = function (plugin, options, next) {
     twitter.init(plugin);
     flickr.init(plugin);
   }
-  twitterProcessor.init(plugin);
+  if (plugin.app.config.enableProcessing) {
+    plugin.log(['log'], 'Starting processors');
+    twitterProcessor.init(plugin);
+  }
 
   plugin.route({
     path: '/health',

@@ -33,19 +33,13 @@ Post.prototype.toEntity = function (entityGenerator) {
   return result;
 };
 
-Post.prototype.fromEntity = function (entity) {
+Post.fromEntity = function (entity) {
   var obj = {
-    id: entity.RowKey._,
-    created: entity.created._,
-    link: entity.link._,
-    url: entity.url._,
-    width: entity.width._,
-    height: entity.height._,
-    published: entity.published._,
-    title: entity.title._,
-    author: entity.author._,
-    status: entity.status._
+    id: entity.RowKey._
   };
+  _.each(_.omit(entity, 'RowKey', 'PartitionKey'), function (val, key) {
+    obj[key] = val._;
+  });
   return new Post(obj);
 };
 

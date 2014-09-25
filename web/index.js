@@ -1,10 +1,46 @@
+var request = require('request');
+var _ = require('underscore');
+
 exports.register = function (plugin, options, next) {
 
   plugin.route({
     path: '/health',
     method: 'GET',
-    handler: function (request, reply) {
-      reply({ web: "healhty" });
+    handler: function (req, reply) {
+      var result = { web: "healhty" };
+      var code = 200;
+      request.get(
+        'http://127.0.0.1:' + plugin.app.config.ports.api + '/health',
+        function (err, resp, body) {
+          if (err) {
+            code = 500;
+            result.api = err.message;
+          } else {
+            _.extend(result, JSON.parse(body));
+          }
+          request.get(
+            'http://127.0.0.1:' + plugin.app.config.ports.bot + '/health',
+            function (err, resp, body) {
+              if (err) {
+                code = 500;
+                result.bot = err.message;
+              } else {
+                _.extend(result, JSON.parse(body));
+              }
+              reply(result);
+            });
+        });
+    }
+  });
+
+  plugin.route({
+    method: 'GET',
+    path: '/api/post',
+    handler: {
+      proxy: {
+        uri: 'http://127.0.0.1:' + plugin.app.config.ports.api + '/post',
+        passThrough: true
+      }
     }
   });
 
@@ -13,7 +49,7 @@ exports.register = function (plugin, options, next) {
     path: '/{param*}',
     handler: {
       directory: {
-        path: 'public',
+        path: __dirname + '/public',
         listing: false
       }
     }

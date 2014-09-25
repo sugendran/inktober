@@ -1,8 +1,10 @@
 var azure = require('azure-storage');
 var retryOperations = new azure.ExponentialRetryPolicyFilter();
 var tableSvc = azure.createTableService().withFilter(retryOperations);
-var postHandlers = require('./handlers/posts')(tableSvc, azure);
-var taskHandlers = require('./handlers/tasks')(tableSvc, azure);
+var TASK_TABLE_NAME = 'devtasks';
+var POST_TABLE_NAME = 'devposts';
+var postHandlers = require('./handlers/posts')(tableSvc, azure, POST_TABLE_NAME);
+var taskHandlers = require('./handlers/tasks')(tableSvc, azure, TASK_TABLE_NAME);
 
 exports.register = function (plugin, options, next) {
 
@@ -59,12 +61,23 @@ exports.register = function (plugin, options, next) {
     handler: taskHandlers.update
   });
 
-  tableSvc.createTableIfNotExists('devtasks', function(error){
+
+  plugin.route({
+    path: '/health',
+    method: 'GET',
+    handler: function (request, reply) {
+      reply({ api: 'healthy' });
+    }
+  });
+
+  tableSvc.createTableIfNotExists(TASK_TABLE_NAME, function(error){
     if (error) {
+      console.error(error.message);
       return next(error);
     }
-    tableSvc.createTableIfNotExists('posts', function(error){
+    tableSvc.createTableIfNotExists(POST_TABLE_NAME, function(error){
       if (error) {
+        console.error(error.message);
         return next(error);
       }
       next();

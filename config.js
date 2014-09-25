@@ -6,13 +6,18 @@ requiredKeys.forEach(function (key) {
 });
 
 var enableBots = true;
+var enableProcessing = true;
 if (process.env.ENABLE_BOTS) {
   enableBots = process.env.ENABLE_BOTS !== 'false';
+}
+if (process.env.ENABLE_PROCESSING) {
+  enableProcessing = process.env.ENABLE_PROCESSING !== 'false';
 }
 
 
 module.exports = {
   enableBots: enableBots,
+  enableProcessing: enableProcessing,
   ports: {
     web: process.env.PORT || 8000,
     api: 8001,
