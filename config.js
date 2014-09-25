@@ -19,7 +19,7 @@ module.exports = {
   enableBots: enableBots,
   enableProcessing: enableProcessing,
   ports: {
-    web: process.env.PORT || 8000,
+    web: process.env.PORT || process.env.port || 8000,
     api: 8001,
     bot: 8002
   },
