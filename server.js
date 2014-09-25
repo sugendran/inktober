@@ -43,7 +43,6 @@ var manifest = {
       select: 'web'
     }],
     'good': {
-      maxLogSize: 1 * 1024 * 1024, // 1 MB
       subscribers: {
         console: ['ops', 'request', 'log', 'error']
       }
