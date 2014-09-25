@@ -4,12 +4,12 @@ var twitterProcessor = require('./twitter-processor');
 
 exports.register = function (plugin, options, next) {
   if (plugin.app.config.enableBots) {
-    plugin.log(['log'], 'Starting bots');
+    console.log('Starting bots');
     twitter.init(plugin);
     flickr.init(plugin);
   }
   if (plugin.app.config.enableProcessing) {
-    plugin.log(['log'], 'Starting processors');
+    console.log('Starting processors');
     twitterProcessor.init(plugin);
   }
 

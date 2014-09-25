@@ -50,6 +50,6 @@ Hapi.Pack.compose(manifest, { relativeTo: __dirname }, function(err, pack) {
   if (err) {
     throw err;
   }
-  pack.log("log", "Starting");
+  console.log("Starting");
   pack.start();
 });
