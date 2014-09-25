@@ -3,15 +3,17 @@ var flickr = require('./flickr');
 var twitterProcessor = require('./twitter-processor');
 
 exports.register = function (plugin, options, next) {
-  if (plugin.app.config.enableBots) {
-    plugin.log(['log'], 'Starting bots');
-    twitter.init(plugin);
-    flickr.init(plugin);
-  }
-  if (plugin.app.config.enableProcessing) {
-    plugin.log(['log'], 'Starting processors');
-    twitterProcessor.init(plugin);
-  }
+  setTimeout(function () {
+    if (plugin.app.config.enableBots) {
+      plugin.log(['log'], 'Starting bots');
+      twitter.init(plugin);
+      flickr.init(plugin);
+    }
+    if (plugin.app.config.enableProcessing) {
+      plugin.log(['log'], 'Starting processors');
+      twitterProcessor.init(plugin);
+    }
+  }, 1000);
 
   plugin.route({
     path: '/health',
