@@ -21,7 +21,6 @@ var manifest = {
       labels: 'api'
     }
   }, {
-    host: 'localhost',
     port: config.ports.web,
     options: {
       labels: 'web',
