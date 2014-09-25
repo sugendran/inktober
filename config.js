@@ -18,7 +18,7 @@ if (typeof(port) === 'string') {
   port = parseInt(port, 10);
 }
 
-module.exports = {
+var config = {
   enableBots: enableBots,
   enableProcessing: enableProcessing,
   ports: {
@@ -35,3 +35,6 @@ module.exports = {
   flickr: process.env.FLICKR_KEY,
   embedly: process.env.EMBEDLY_KEY
 };
+console.log(config);
+
+module.exports = config;
