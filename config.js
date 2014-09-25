@@ -1,5 +1,3 @@
-console.dir(process.env);
-
 var requiredKeys = ['AZURE_STORAGE_ACCOUNT', 'AZURE_STORAGE_ACCESS_KEY'];
 requiredKeys.forEach(function (key) {
   if (!process.env[key]) {
