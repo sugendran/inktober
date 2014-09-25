@@ -41,12 +41,7 @@ var manifest = {
     }],
     './web': [{
       select: 'web'
-    }],
-    'good': {
-      subscribers: {
-        console: ['ops', 'request', 'log', 'error']
-      }
-    }
+    }]
   }
 };
 
