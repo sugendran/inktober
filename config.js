@@ -16,10 +16,6 @@ if (process.env.ENABLE_PROCESSING) {
   enableProcessing = process.env.ENABLE_PROCESSING !== 'false';
 }
 var port = process.env.PORT || process.env.port || 8000;
-if (typeof(port) === 'string') {
-  console.log('parsing port from ' + port);
-  port = parseInt(port, 10);
-}
 
 var config = {
   enableBots: enableBots,
@@ -38,6 +34,5 @@ var config = {
   flickr: process.env.FLICKR_KEY,
   embedly: process.env.EMBEDLY_KEY
 };
-console.log(config);
 
 module.exports = config;
