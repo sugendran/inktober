@@ -35,10 +35,12 @@ exports.register = function (plugin, options, next) {
 
   plugin.route({
     method: 'GET',
-    path: '/api/post',
+    path: '/post',
     handler: {
       proxy: {
-        uri: 'http://127.0.0.1:' + plugin.app.config.ports.api + '/post',
+        host: '127.0.0.1',
+        port: plugin.app.config.ports.api,
+        protocol: 'http',
         passThrough: true
       }
     }

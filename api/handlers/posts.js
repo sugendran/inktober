@@ -13,8 +13,8 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
     list: function (request, reply) {
       var year = request.query.year ? parseInt(request.query.year, 10) : thisYear;
       if (isNaN(year)) { year = thisYear; }
-      var start = startDateFromYear(thisYear);
-      var end = endDateFromYear(thisYear);
+      var start = startDateFromYear(year);
+      var end = endDateFromYear(year);
 
       var query = new azure.TableQuery().where('PartitionKey eq ?', 'post');
       if (request.query.limit) {
@@ -28,7 +28,7 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
       } else {
         query.and('published le ' + end + 'l').and('published ge ' + start + 'l');
       }
-      console.log(query.toQueryObject());
+
       var continuationToken = null;
       var results = [];
       function get() {

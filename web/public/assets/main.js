@@ -1,11 +1,17 @@
 (function () {
-  var buttonDiv, spinnerDiv, contentDiv;
-  var min_date = Date.now();
+  var spinnerDiv, contentDiv, buttonDiv;
   var moreAvailable = true;
+  var newItems = [];
   var RAF = window.requestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.oRequestAnimationFrame || function (fn) { setTimeout(fn, 0); };
+
+  var current_year = 2014;
+  var matches = window.location.search.match(/year=(\d+)/);
+  if (matches != null) {
+    current_year = matches[1];
+  }
 
   function hideSpinner () {
     buttonDiv.style.display = moreAvailable ? 'block' : 'none';
@@ -47,36 +53,38 @@
   }
 
   function loadMore () {
+    var items = newItems.splice(0, 50);
+    moreAvailable = newItems.length > 0;
+    for (var i=0, ii=items.length; i<ii; i++) {
+      items[i] = makePost(items[i]);
+    }
+    RAF(function () {
+      for (var j=0, jj=items.length; j<jj; j++) {
+        contentDiv.appendChild(items[j]);
+      }
+      hideSpinner();
+    });
+  }
+
+  function loadInfo () {
     showSpinner();
 
     var request = new XMLHttpRequest();
-    request.open('GET', '/api/post?max_date=' + min_date, true);
+    request.open('GET', '/post?year=' + current_year, true);
 
     request.onload = function() {
       if (this.status >= 200 && this.status < 400){
         // Success!
-        var newItems = [];
         var resp = this.response;
         var posts = JSON.parse(resp);
-        var old_min_date = min_date;
         for (var i=0, ii=posts.length; i<ii; i++) {
           var post = posts[i];
           post.width = parseInt(post.width, 10);
           post.height = parseInt(post.height, 10);
           post.published = parseFloat(post.published);
-          console.log('comparing ' + [min_date, post.published] + ': ' + (min_date < post.published));
-          min_date = Math.min(min_date, post.published);
-          newItems.push(makePost(post));
+          newItems.push(post);
         }
-        if (old_min_date === min_date) {
-          moreAvailable = false;
-        }
-        RAF(function () {
-          for (var j=0, jj=newItems.length; j<jj; j++) {
-            contentDiv.appendChild(newItems[j]);
-          }
-          hideSpinner();
-        });
+        loadMore();
       }
     };
 
@@ -89,7 +97,7 @@
     buttonDiv = document.querySelector('.load-more');
     var button = document.querySelector('.load-more .btn');
     button.addEventListener('click', loadMore);
-    loadMore();
+    loadInfo();
   }
 
   document.addEventListener('DOMContentLoaded', onLoad);
