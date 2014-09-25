@@ -41,7 +41,13 @@ var manifest = {
     }],
     './web': [{
       select: 'web'
-    }]
+    }],
+    'good': {
+      alwaysMeasureOps: false,
+      subscribers: {
+        console: ['request', 'log', 'error']
+      }
+    }
   }
 };
 
@@ -50,6 +56,6 @@ Hapi.Pack.compose(manifest, { relativeTo: __dirname }, function(err, pack) {
   if (err) {
     throw err;
   }
-  console.log("Starting");
+  pack.log("log", "Starting");
   pack.start();
 });

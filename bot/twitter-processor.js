@@ -42,7 +42,7 @@ function GetNextItem (plugin, done) {
 
 module.exports.init = function (plugin) {
   var next = GetNextItem.bind(null, plugin, function (error) {
-    if (error) { console.log('error' + error.message); }
+    if (error) { plugin.log(['error', error.message]); }
     setTimeout(next, 50);
   });
   setTimeout(next, 10000);

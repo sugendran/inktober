@@ -33,9 +33,9 @@ function pushTask (taskUrl, photo) {
   });
 }
 
-function parseResponse (taskUrl, url, error, response, body) {
+function parseResponse (taskUrl, url, log, error, response, body) {
     if (error) {
-      console.log('error:' + error.message);
+      log(['error'], error.message);
       return;
     }
     var obj = JSON.parse(body);
@@ -44,13 +44,13 @@ function parseResponse (taskUrl, url, error, response, body) {
     if (page < totalPages) {
       page++;
       var nextPage = url + '&page=' + page;
-      var callback = parseResponse.bind(this, taskUrl, url);
+      var callback = parseResponse.bind(this, taskUrl, url, log);
       request(nextPage, callback);
     }
     obj.photos.photo.forEach(pushTask.bind(null, taskUrl));
 }
 
-function checkLastPeriod (taskUrl, baseUrl) {
+function checkLastPeriod (taskUrl, baseUrl, log) {
 
   // search the last day to make sure we've got everything
   var since = Date.now() - 24 * 60 * 60 * 1000;
@@ -58,18 +58,19 @@ function checkLastPeriod (taskUrl, baseUrl) {
   var datestr = [start.getFullYear(), lz(start.getMonth() + 1), lz(start.getDate()) ].join('-');
 
   var url = baseUrl + "&min_upload_date=" + datestr;
-  var callback = parseResponse.bind(this, taskUrl, url);
+  var callback = parseResponse.bind(this, taskUrl, url, log);
   request(url, callback);
 }
 
 module.exports.init = function (plugin) {
   var taskUrl = 'http://127.0.0.1:' + plugin.app.config.ports.api + '/task';
+  var log = plugin.log.bind(plugin);
   var url = "https://api.flickr.com/services/rest/" +
             "?method=flickr.photos.search" +
             "&api_key=" + plugin.app.config.flickr +
             "&tags=inktober" +
             "&format=json&nojsoncallback=1";
-  var check = checkLastPeriod.bind(this, taskUrl, url);
+  var check = checkLastPeriod.bind(this, taskUrl, url, log);
   check();
   setInterval(check, 12 * 60 * 60 * 1000);
 };

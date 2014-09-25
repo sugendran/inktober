@@ -69,7 +69,7 @@ module.exports.init = function (plugin) {
   tu.filter({
       track: terms
   }, function(stream) {
-      console.log('listening to twitter stream');
+      plugin.log(['plugin', 'info'], 'listening to twitter stream');
       stream.on('tweet', onTweet);
   });
 };
