@@ -13,7 +13,7 @@ if (process.env.ENABLE_BOTS) {
 if (process.env.ENABLE_PROCESSING) {
   enableProcessing = process.env.ENABLE_PROCESSING !== 'false';
 }
-var port = process.env.PORT || 8000;
+var port = process.env.PORT || process.env.port || 8000;
 if (typeof(port) === 'string') {
   port = parseInt(port, 10);
 }
