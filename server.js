@@ -45,10 +45,7 @@ var manifest = {
     'good': {
       maxLogSize: 1 * 1024 * 1024, // 1 MB
       subscribers: {
-        console: ['ops', 'request', 'log', 'error'],
-        'logs/access': ['request'],
-        'logs/info': ['log'],
-        'logs/error': ['error']
+        console: ['ops', 'request', 'log', 'error']
       }
     }
   }
