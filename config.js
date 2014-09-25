@@ -1,3 +1,5 @@
+console.dir(process.env);
+
 var requiredKeys = ['AZURE_STORAGE_ACCOUNT', 'AZURE_STORAGE_ACCESS_KEY'];
 requiredKeys.forEach(function (key) {
   if (!process.env[key]) {
@@ -15,6 +17,7 @@ if (process.env.ENABLE_PROCESSING) {
 }
 var port = process.env.PORT || process.env.port || 8000;
 if (typeof(port) === 'string') {
+  console.log('parsing port from ' + port);
   port = parseInt(port, 10);
 }
 
