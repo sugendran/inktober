@@ -1,8 +1,8 @@
 var azure = require('azure-storage');
 var retryOperations = new azure.ExponentialRetryPolicyFilter();
 var tableSvc = azure.createTableService().withFilter(retryOperations);
-var TASK_TABLE_NAME = 'devtasks';
-var POST_TABLE_NAME = 'devposts';
+var TASK_TABLE_NAME = 'tasks';
+var POST_TABLE_NAME = 'posts';
 var postHandlers = require('./handlers/posts')(tableSvc, azure, POST_TABLE_NAME);
 var taskHandlers = require('./handlers/tasks')(tableSvc, azure, TASK_TABLE_NAME);
 
