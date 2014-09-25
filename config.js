@@ -13,13 +13,16 @@ if (process.env.ENABLE_BOTS) {
 if (process.env.ENABLE_PROCESSING) {
   enableProcessing = process.env.ENABLE_PROCESSING !== 'false';
 }
-
+var port = process.env.PORT || process.env.port || 8000;
+if (typeof(port) === 'string') {
+  port = parseInt(port, 10);
+}
 
 module.exports = {
   enableBots: enableBots,
   enableProcessing: enableProcessing,
   ports: {
-    web: process.env.PORT || process.env.port || 8000,
+    web: port,
     api: 8001,
     bot: 8002
   },
