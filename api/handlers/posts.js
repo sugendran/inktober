@@ -11,6 +11,7 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
   var entityGenerator = azure.TableUtilities.entityGenerator;
   return {
     list: function (request, reply) {
+      var ttl = 1;
       var year = request.query.year ? parseInt(request.query.year, 10) : thisYear;
       if (isNaN(year)) { year = thisYear; }
       var start = startDateFromYear(year);
@@ -26,6 +27,8 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
       } else if(request.query.url) {
         query.and('url eq ?', request.query.url);
       } else {
+        // cache these results for an hour
+        ttl = 60 * 60 * 1000;
         query.and('published le ' + end + 'l').and('published ge ' + start + 'l');
       }
 
@@ -46,7 +49,7 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
             continuationToken = result.continuationToken();
             get();
           } else {
-            reply(results);
+            reply(results).ttl(ttl);
           }
         });
       }
