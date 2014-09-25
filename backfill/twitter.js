@@ -44,15 +44,19 @@ function search() {
   if (max_id_str) {
     opts.max_id = max_id_str;
   }
+
   tu.search(opts, function (err, result) {
     if (err) {
       console.error(err);
       return;
     }
     result.statuses.forEach(onTweet);
-    max_id_str = result.search_metadata.max_id_str;
     if (result.search_metadata.next_results) {
-      setTimeout(search, 1000);
+      var matches = result.search_metadata.next_results.match(/max_id=(\d+)/);
+      if (matches != null) {
+        max_id_str = matches[1];
+        setTimeout(search, 1000);
+      }
     }
   });
 }
