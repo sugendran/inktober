@@ -1,5 +1,6 @@
 run.sh
 backfill-twitter.sh
+console.sh
 
 ## OSX
 
