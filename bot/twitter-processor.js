@@ -40,7 +40,7 @@ function GetNextItem (plugin, done) {
         plugin.app.config.embedly,
         API_URL,
         url.expanded_url || url.url,
-        created.getTime(),
+        created,
         function (error) {
           if (error) {
             return taskUtils.failTask(API_URL, task, done);
