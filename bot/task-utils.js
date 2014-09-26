@@ -85,7 +85,7 @@ function checkIfExists(API_URL, url, done) {
   });
 }
 
-function extractPost (EMBEDLY_KEY, API_URL, url, done) {
+function extractPost (EMBEDLY_KEY, API_URL, url, createdDate, done) {
   checkIfProcessed(API_URL, url, function (err) {
     if (err) { return done(err); }
     var embedlyUrl = "http://api.embed.ly/1/extract?key=" + EMBEDLY_KEY + "&url=" + encodeURIComponent(url) + "&format=json";
@@ -101,6 +101,8 @@ function extractPost (EMBEDLY_KEY, API_URL, url, done) {
       var post = new Post(photo);
       if (details.published) {
         post.published = details.published;
+      } else {
+        post.published = createdDate;
       }
       post.title = details.title;
       post.author = details.provider_display;

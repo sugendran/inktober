@@ -84,6 +84,9 @@
           post.published = parseFloat(post.published);
           newItems.push(post);
         }
+        posts = posts.sort(function(a, b) {
+          return b.published - a.published;
+        });
         loadMore();
       }
     };

@@ -31,12 +31,18 @@ function GetNextItem (plugin, done) {
         return taskUtils.failTask(API_URL, task, done);
       }
       var url = task.payload.entities.urls[0];
-      taskUtils.extractPost(plugin.app.config.embedly, API_URL, url.expanded_url || url.url, function (error) {
-        if (error) {
-          return taskUtils.failTask(API_URL, task, done);
-        }
-        taskUtils.completeTask(API_URL, task, done);
-      });
+      var created = Date.parse(task.payload.created_at);
+      taskUtils.extractPost(
+        plugin.app.config.embedly,
+        API_URL,
+        url.expanded_url || url.url,
+        created.getTime(),
+        function (error) {
+          if (error) {
+            return taskUtils.failTask(API_URL, task, done);
+          }
+          taskUtils.completeTask(API_URL, task, done);
+        });
     }
   });
 }
