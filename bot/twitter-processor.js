@@ -32,6 +32,10 @@ function GetNextItem (plugin, done) {
       }
       var url = task.payload.entities.urls[0];
       var created = Date.parse(task.payload.created_at);
+      if (isNaN(created)) {
+        console.log('failed to parse '+ task.payload.created_at);
+        created = Date.now();
+      }
       taskUtils.extractPost(
         plugin.app.config.embedly,
         API_URL,
