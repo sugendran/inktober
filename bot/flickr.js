@@ -1,6 +1,3 @@
-// search: https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=dd7bea7f59366852cf2c9ca7bb97213f&tags=inktober&min_upload_date=2013-09-01&format=json&nojsoncallback=1
-// getInfo:  https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=dd7bea7f59366852cf2c9ca7bb97213f&photo_id=14054953525&format=rest
-// getSizes: https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=dd7bea7f59366852cf2c9ca7bb97213f&photo_id=14054953525&format=rest
 var request = require('request');
 var Task = require('../models/task');
 var foundItems = [];

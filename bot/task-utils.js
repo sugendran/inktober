@@ -115,7 +115,15 @@ function extractPost (EMBEDLY_KEY, API_URL, url, createdDate, done) {
   });
 }
 
+function checkAndSavePost (API_URL, post, done) {
+  checkIfExists(API_URL, post.url, function (err) {
+    if (err) { return done(err); }
+    savePost(API_URL, post, done);
+  });
+}
+
 module.exports.failTask = failTask;
 module.exports.completeTask = completeTask;
 module.exports.extractPost = extractPost;
 module.exports.saveTask = saveTask;
+module.exports.checkAndSavePost = checkAndSavePost;

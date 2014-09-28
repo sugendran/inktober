@@ -1,6 +1,7 @@
 var twitter = require('./twitter');
 var flickr = require('./flickr');
 var twitterProcessor = require('./twitter-processor');
+var flickrProcessor = require('./flickr-processor');
 
 exports.register = function (plugin, options, next) {
   setTimeout(function () {
@@ -12,6 +13,7 @@ exports.register = function (plugin, options, next) {
     if (plugin.app.config.enableProcessing) {
       plugin.log(['log'], 'Starting processors');
       twitterProcessor.init(plugin);
+      flickrProcessor.init(plugin);
     }
   }, 1000);
 
@@ -22,7 +24,8 @@ exports.register = function (plugin, options, next) {
       reply({
         flickr: flickr.health(),
         twitter: twitter.health(),
-        twitterProcessor: twitterProcessor.health()
+        twitterProcessor: twitterProcessor.health(),
+        flickrProcessor: flickrProcessor.health()
       });
     }
   });

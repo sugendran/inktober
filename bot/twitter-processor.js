@@ -23,7 +23,10 @@ function GetNextItem (plugin, done) {
       return;
     }
     var obj = JSON.parse(body);
-    if (obj.length) {
+    if (obj.length === 0) {
+      // wait some time before trying for a task since there weren't any
+      setTimeout(done, 5000);
+    } else {
       var task = new Task(obj[0]);
       processed.push(new Date());
       // only care about things with links
@@ -60,5 +63,5 @@ module.exports.init = function (plugin) {
 };
 
 module.exports.health = function () {
-  return processed.length + ' retweets per hour';
+  return processed.length + ' tweets per hour';
 };
