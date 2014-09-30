@@ -6,7 +6,7 @@ var terms = ['inktober'];
 var canRetweetAlways = ['13205002'];
 var lastRetweets = [];
 var now = new Date();
-var startDate = Date.UTC(now.getFullYear(), 8, 31);
+var startDate = Date.UTC(now.getFullYear(), 8, 30);
 var endDate = Date.UTC(now.getFullYear(), 10, 1);
 
 
