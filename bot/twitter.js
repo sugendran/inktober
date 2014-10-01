@@ -47,7 +47,13 @@ module.exports.init = function (plugin) {
     } catch (e) {
 
     }
-    if ((txt.indexOf('http') !== -1) && ((canRetweetAlways.indexOf(tweet.id_str) !== -1) || (date && date <= endDate && date >= startDate))) {
+    var hasEntities = task.payload.entities.urls.length > 0;
+    if ( hasEntities &&
+         (
+          (canRetweetAlways.indexOf(tweet.id_str) !== -1) ||
+          (date && date <= endDate && date >= startDate)
+         )
+       ) {
       lastRetweets.push(Date.now());
       // console.log("Retweeting: " + tweet.text);
       // note we're using the id_str property since
