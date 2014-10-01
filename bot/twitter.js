@@ -47,7 +47,7 @@ module.exports.init = function (plugin) {
     } catch (e) {
 
     }
-    var hasEntities = task.payload.entities.urls.length > 0;
+    var hasEntities = tweet.entities.urls.length > 0;
     if ( hasEntities &&
          (
           (canRetweetAlways.indexOf(tweet.id_str) !== -1) ||
