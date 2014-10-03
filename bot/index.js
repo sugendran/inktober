@@ -11,10 +11,10 @@ exports.register = function (plugin, options, next) {
       flickr.init(plugin);
 
 
-      // will restart the bot every 4 hours as streams seem to die
+      // will restart the bot every 8 hours as streams seem to die
       setInterval(function () {
         twitter.init(plugin);
-      }, 4* 60 * 60 * 1000);
+      }, 8 * 60 * 60 * 1000);
     }
     if (plugin.app.config.enableProcessing) {
       plugin.log(['log'], 'Starting processors');

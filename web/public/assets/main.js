@@ -7,10 +7,25 @@
     window.webkitRequestAnimationFrame ||
     window.oRequestAnimationFrame || function (fn) { setTimeout(fn, 0); };
 
+  var TWO_HOURS = (2 * 60 * 60 * 1000);
   var current_year = 2014;
+  var before = Date.now();
+  var after = Date.now() - TWO_HOURS;
+  var minDate = Date.UTC(current_year, 8, 1);
+
   var matches = window.location.search.match(/year=(\d+)/);
   if (matches != null) {
     current_year = matches[1];
+  }
+
+  var beforeMatch = window.location.hash.match(/before=(\d+)/);
+  if (beforeMatch != null) {
+    before = parseInt(beforeMatch[1], 10);
+  }
+
+  var afterMatch = window.location.hash.match(/after=(\d+)/);
+  if (afterMatch != null) {
+    after = parseInt(afterMatch[1], 10);
   }
 
   function hideSpinner () {
@@ -53,11 +68,11 @@
   }
 
   function loadMore () {
-    var items = newItems.splice(0, 80);
-    moreAvailable = newItems.length > 0;
-    for (var i=0, ii=items.length; i<ii; i++) {
-      items[i] = makePost(items[i]);
+    var items = [];
+    for (var i=0, ii=newItems.length; i<ii; i++) {
+      items.push(makePost(newItems[i]));
     }
+    newItems = [];
     RAF(function () {
       for (var j=0, jj=items.length; j<jj; j++) {
         contentDiv.appendChild(items[j]);
@@ -70,24 +85,32 @@
     showSpinner();
 
     var request = new XMLHttpRequest();
-    request.open('GET', '/post?year=' + current_year, true);
+    window.location.hash = 'before=' + before + '&after=' + after;
+    var url = '/post?year=' + current_year + '&before=' + before + '&after=' + after;
+
+    request.open('GET', url, true);
 
     request.onload = function() {
       if (this.status >= 200 && this.status < 400){
         // Success!
         var resp = this.response;
         var posts = JSON.parse(resp);
+        var earliest = Date.now();
         for (var i=0, ii=posts.length; i<ii; i++) {
           var post = posts[i];
           post.width = parseInt(post.width, 10);
           post.height = parseInt(post.height, 10);
           post.published = parseFloat(post.published);
           newItems.push(post);
+          earliest = Math.min(post.published, earliest);
         }
+        before = earliest - 1;
+        after = earliest - TWO_HOURS;
         posts = posts.sort(function(a, b) {
           return b.published - a.published;
         });
         loadMore();
+        moreAvailable = after > minDate;
       }
     };
 
@@ -99,7 +122,7 @@
     contentDiv = document.querySelector('.content');
     buttonDiv = document.querySelector('.load-more');
     var button = document.querySelector('.load-more .btn');
-    button.addEventListener('click', loadMore);
+    button.addEventListener('click', loadInfo);
     loadInfo();
   }
 

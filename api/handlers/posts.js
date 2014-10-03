@@ -17,6 +17,13 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
       var start = startDateFromYear(year);
       var end = endDateFromYear(year);
 
+      if (request.query.before) {
+        end = parseInt(request.query.before, 10);
+      }
+      if (request.query.after) {
+        start = parseInt(request.query.after, 10);
+      }
+
       var query = new azure.TableQuery().where('PartitionKey eq ?', 'post');
       if (request.query.limit) {
         query.top(request.query.limit);
@@ -45,8 +52,8 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
             results.push(post.toJSON());
           });
 
-          if (results.length < 320 && result.continuationToken) {
-            continuationToken = result.continuationToken();
+          if (results.length < 1000 && result.continuationToken) {
+            continuationToken = result.continuationToken;
             get();
           } else {
             reply(results).ttl(ttl);
