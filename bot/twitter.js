@@ -3,6 +3,7 @@ var taskUtils = require('./task-utils');
 var tu;
 var stream = null;
 var terms = ['inktober'];
+var disallowed = ["\uD83D\uDC49","\uD83D\uDC48","\uD83D\uDC46","\uD83D\uDC46"];
 // jake parker = 13205002
 var canRetweetAlways = ['13205002'];
 var lastRetweets = [];
@@ -47,9 +48,12 @@ module.exports.init = function (plugin) {
       return;
     }
 
-    if (txt.indexOf("👉") !== -1) {
-      return;
+    for (var i=0, ii=disallowed.length; i<ii; i++) {
+      if (txt.indexOf(disallowed[i]) !== -1) {
+        return;
+      }
     }
+
 
     var date = null;
     try {
