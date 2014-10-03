@@ -1,6 +1,7 @@
 var Task = require('../models/task');
 var taskUtils = require('./task-utils');
 var tu;
+var stream = null;
 var terms = ['inktober'];
 // jake parker = 13205002
 var canRetweetAlways = ['13205002'];
@@ -18,6 +19,11 @@ setInterval(function () {
 
 module.exports.init = function (plugin) {
   tu = require('tuiter')(plugin.app.config.twitter);
+
+  if (stream !== null) {
+    stream.emit('end');
+    stream = null;
+  }
 
   function onReTweet(err) {
     if (err) {
@@ -74,9 +80,10 @@ module.exports.init = function (plugin) {
 
   tu.filter({
       track: terms
-  }, function(stream) {
-      plugin.log(['plugin', 'info'], 'listening to twitter stream');
-      stream.on('tweet', onTweet);
+  }, function(_stream) {
+    stream = _stream;
+    plugin.log(['plugin', 'info'], 'listening to twitter stream');
+    stream.on('tweet', onTweet);
   });
 };
 
