@@ -47,6 +47,10 @@ module.exports.init = function (plugin) {
       return;
     }
 
+    if (txt.indexOf("👉") !== -1) {
+      return;
+    }
+
     var date = null;
     try {
       date = Date.parse(tweet.created_at);
