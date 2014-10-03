@@ -53,7 +53,7 @@
   }
 
   function loadMore () {
-    var items = newItems.splice(0, 50);
+    var items = newItems.splice(0, 80);
     moreAvailable = newItems.length > 0;
     for (var i=0, ii=items.length; i<ii; i++) {
       items[i] = makePost(items[i]);

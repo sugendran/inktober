@@ -45,7 +45,7 @@ module.exports = function (tableSvc, azure, TABLE_NAME) {
             results.push(post.toJSON());
           });
 
-          if (results.length < 200 && result.continuationToken) {
+          if (results.length < 320 && result.continuationToken) {
             continuationToken = result.continuationToken();
             get();
           } else {
