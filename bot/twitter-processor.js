@@ -31,9 +31,9 @@ function GetNextItem (plugin, done) {
       processed.push(new Date());
       // only care about things with links
       var url = null;
-      if (task.payload.entities.urls.length > 0) {
+      if (task.payload.entities.urls && task.payload.entities.urls.length > 0) {
         url = task.payload.entities.urls[0];
-      } else if (task.payload.entities.media.length > 0) {
+      } else if (task.payload.entities.media && task.payload.entities.media.length > 0) {
         url = task.payload.entities.media[0];
       }
       if (url == null) {
