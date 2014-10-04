@@ -30,10 +30,16 @@ function GetNextItem (plugin, done) {
       var task = new Task(obj[0]);
       processed.push(new Date());
       // only care about things with links
-      if (task.payload.entities.urls.length < 1) {
+      var url = null;
+      if (task.payload.entities.urls.length > 0) {
+        url = task.payload.entities.urls[0];
+      } else if (task.payload.entities.media.length > 0) {
+        url = task.payload.entities.media[0];
+      }
+      if (url == null) {
         return taskUtils.failTask(API_URL, task, done);
       }
-      var url = task.payload.entities.urls[0];
+
       var created = Date.parse(task.payload.created_at);
       if (isNaN(created)) {
         console.log('failed to parse '+ task.payload.created_at);
