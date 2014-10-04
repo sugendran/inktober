@@ -95,6 +95,13 @@
         // Success!
         var resp = this.response;
         var posts = JSON.parse(resp);
+
+        if (posts.length === 0 && after > minDate) {
+          after -= 3 * TWO_HOURS;
+          loadInfo();
+          return;
+        }
+
         var earliest = Date.now();
         for (var i=0, ii=posts.length; i<ii; i++) {
           var post = posts[i];
