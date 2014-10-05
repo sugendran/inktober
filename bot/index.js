@@ -12,9 +12,9 @@ exports.register = function (plugin, options, next) {
 
 
       // will restart the bot every 8 hours as streams seem to die
-      setInterval(function () {
-        twitter.init(plugin);
-      }, 8 * 60 * 60 * 1000);
+      // setInterval(function () {
+      //   twitter.init(plugin);
+      // }, 8 * 60 * 60 * 1000);
     }
     if (plugin.app.config.enableProcessing) {
       plugin.log(['log'], 'Starting processors');
