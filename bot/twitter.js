@@ -118,7 +118,6 @@ module.exports.health = function () {
 
 setTimeout(function () {
   if (lastRetweets.length === 0) {
-    console.log('twitter is dead, killing the process');
-    process.exit();
+    throw new Error('twitter is dead, killing the process');
   }
 }, 60 * 60 * 1000);
