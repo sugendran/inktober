@@ -2,6 +2,7 @@ var twitter = require('./twitter');
 var flickr = require('./flickr');
 var twitterProcessor = require('./twitter-processor');
 var flickrProcessor = require('./flickr-processor');
+var starttime = Date.now();
 
 exports.register = function (plugin, options, next) {
   setTimeout(function () {
@@ -27,12 +28,15 @@ exports.register = function (plugin, options, next) {
     path: '/health',
     method: 'GET',
     handler: function (request, reply) {
-      reply({
+      var obj = {
+        uptime: (Date.now() - starttime),
         flickr: flickr.health(),
         twitter: twitter.health(),
         twitterProcessor: twitterProcessor.health(),
         flickrProcessor: flickrProcessor.health()
-      });
+      };
+      var status = obj.uptime > 360000 && obj.twitter == 0 ? 500 : 200;
+      reply(obj).code(status);
     }
   });
 

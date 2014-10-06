@@ -69,5 +69,5 @@ module.exports.init = function (plugin) {
 };
 
 module.exports.health = function () {
-  return processed.length + ' tweets per hour';
+  return processed.length;
 };

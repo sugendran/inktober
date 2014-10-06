@@ -16,6 +16,9 @@ exports.register = function (plugin, options, next) {
             code = 500;
             result.api = err.message;
           } else {
+            if (resp.statusCode != 200) {
+              code = resp.statusCode;
+            }
             _.extend(result, JSON.parse(body));
           }
           request.get(
@@ -25,9 +28,12 @@ exports.register = function (plugin, options, next) {
                 code = 500;
                 result.bot = err.message;
               } else {
+                if (resp.statusCode != 200) {
+                  code = resp.statusCode;
+                }
                 _.extend(result, JSON.parse(body));
               }
-              reply(result);
+              reply(result).code(code);
             });
         });
     }

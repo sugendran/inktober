@@ -86,5 +86,5 @@ module.exports.init = function (plugin) {
 };
 
 module.exports.health = function () {
-  return processed.length + ' flickrs per hour';
+  return processed.length;
 };

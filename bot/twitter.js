@@ -113,11 +113,5 @@ function init(plugin) {
 module.exports.init = init;
 
 module.exports.health = function () {
-  return lastRetweets.length + ' retweets per hour';
+  return lastRetweets.length;
 };
-
-setTimeout(function () {
-  if (lastRetweets.length == 0) {
-    throw new Error('twitter is dead, killing the process');
-  }
-}, 24 * 60 * 60 * 1000);

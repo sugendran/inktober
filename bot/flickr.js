@@ -73,5 +73,5 @@ module.exports.init = function (plugin) {
 };
 
 module.exports.health = function () {
-  return foundItems.length + ' in the last 24 hours';
+  return foundItems.length;
 };
