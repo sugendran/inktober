@@ -108,10 +108,17 @@ function init(plugin) {
     plugin.log(['plugin', 'info'], 'listening to twitter stream');
     stream.on('tweet', onTweet);
   });
-};
+}
 
 module.exports.init = init;
 
 module.exports.health = function () {
   return lastRetweets.length + ' retweets per hour';
 };
+
+setTimeout(function () {
+  if (lastRetweets.length === 0) {
+    console.log('twitter is dead, killing the process');
+    process.exit();
+  }
+}, 60 * 60 * 1000);
