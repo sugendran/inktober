@@ -36,6 +36,10 @@ function init(plugin) {
     if (err) {
         console.error("retweeting failed :(");
         console.error(err);
+        if (err.status == 403 || err.status == 404) {
+          // need to reauth or something
+          process.exit(1);
+        }
     }
   }
 
