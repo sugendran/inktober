@@ -10,13 +10,23 @@ var lastRetweets = [];
 var now = new Date();
 var startDate = Date.UTC(now.getFullYear(), 8, 30);
 var endDate = Date.UTC(now.getFullYear(), 10, 1);
-
+var retweetable = true;
 
 // only keep the values for the last hour
 setInterval(function () {
   var now = Date.now() - 60 * 60 * 1000;
   lastRetweets = lastRetweets.filter(function (val) { return val >= now; });
 }, 1000);
+
+// pauses the retweeting for about 40 minutes
+var _pauseTimeout = 0;
+function pauseRetweeting() {
+  retweetable = false;
+  clearTimeout(_pauseTimeout);
+  setTimeout(function () {
+    retweetable = true;
+  }, 40 * 60 * 1000);
+}
 
 function init(plugin) {
   if (tu == null) {
@@ -36,9 +46,9 @@ function init(plugin) {
     if (err) {
         console.error("retweeting failed :(");
         console.error(err);
-        if (err.status == 403 || err.status == 404) {
-          // need to reauth or something
-          process.exit(1);
+        if (err.status == 403) {
+          // reached the update limit
+          pauseRetweeting();
         }
     }
   }
@@ -76,7 +86,7 @@ function init(plugin) {
           (tweet.entities.urls && tweet.entities.urls.length > 0) ||
           (tweet.entities.media && tweet.entities.media.length > 0)
         );
-      if ( hasEntities &&
+      if ( hasEntities && retweetable &&
            (
             (canRetweetAlways.indexOf(tweet.id_str) !== -1) ||
             (date && date <= endDate && date >= startDate)
