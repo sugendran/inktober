@@ -3,7 +3,9 @@ var taskUtils = require('./task-utils');
 var tu = null;
 var stream = null;
 var terms = ['inktober', '#inktober'];
-var disallowed = ["\uD83D\uDC49","\uD83D\uDC48","\uD83D\uDC46","\uD83D\uDC46"];
+var disallowed = ["\uD83D\uDC49", "\uD83D\uDC48", "\uD83D\uDC46",
+  "\uD83D\uDC46"
+];
 // jake parker = 13205002
 var canRetweetAlways = ['13205002'];
 var lastRetweets = [];
@@ -15,11 +17,14 @@ var retweetable = true;
 // only keep the values for the last hour
 setInterval(function () {
   var now = Date.now() - 60 * 60 * 1000;
-  lastRetweets = lastRetweets.filter(function (val) { return val >= now; });
+  lastRetweets = lastRetweets.filter(function (val) {
+    return val >= now;
+  });
 }, 1000);
 
 // pauses the retweeting for about 40 minutes
 var _pauseTimeout = 0;
+
 function pauseRetweeting() {
   retweetable = false;
   clearTimeout(_pauseTimeout);
@@ -44,12 +49,12 @@ function init(plugin) {
 
   function onReTweet(err) {
     if (err) {
-        console.error("retweeting failed :(");
-        console.error(err);
-        if (err.status == 403) {
-          // reached the update limit
-          pauseRetweeting();
-        }
+      console.error("retweeting failed :(");
+      console.error(err);
+      if (err.status == 403) {
+        // reached the update limit
+        pauseRetweeting();
+      }
     }
   }
 
@@ -59,17 +64,17 @@ function init(plugin) {
       // in there then we probably don't want
       // to retweet it again.
       if (tweet.retweeted) {
-          return;
+        return;
       }
       if (tweet.text.indexOf("RT") !== -1) {
-          return;
+        return;
       }
       var txt = tweet.text.toLowerCase();
       if (terms.indexOf(txt) !== -1) {
         return;
       }
 
-      for (var i=0, ii=disallowed.length; i<ii; i++) {
+      for (var i = 0, ii = disallowed.length; i < ii; i++) {
         if (txt.indexOf(disallowed[i]) !== -1) {
           return;
         }
@@ -83,21 +88,21 @@ function init(plugin) {
         date = Date.now();
       }
       var hasEntities = (
-          (tweet.entities.urls && tweet.entities.urls.length > 0) ||
-          (tweet.entities.media && tweet.entities.media.length > 0)
-        );
-      if ( hasEntities && retweetable &&
-           (
-            (canRetweetAlways.indexOf(tweet.id_str) !== -1) ||
-            (date && date <= endDate && date >= startDate)
-           )
-         ) {
+        (tweet.entities.urls && tweet.entities.urls.length > 0) ||
+        (tweet.entities.media && tweet.entities.media.length > 0)
+      );
+      if (hasEntities && retweetable &&
+        (
+          (canRetweetAlways.indexOf(tweet.id_str) !== -1) ||
+          (date && date <= endDate && date >= startDate)
+        )
+      ) {
         lastRetweets.push(Date.now());
         // console.log("Retweeting: " + tweet.text);
         // note we're using the id_str property since
         // javascript is not accurate for 64bit ints
         tu.retweet({
-            id: tweet.id_str
+          id: tweet.id_str
         }, onReTweet);
       }
 
@@ -106,9 +111,9 @@ function init(plugin) {
         sourceId: tweet.id_str,
         payload: tweet
       });
-      taskUtils.saveTask('http://127.0.0.1:' + plugin.app.config.ports.api, task);
-    }
-    catch (e) {
+      taskUtils.saveTask('http://127.0.0.1:' + plugin.app.config.ports.api,
+        task);
+    } catch (e) {
       console.log("failed to do things with the tweet");
       console.log(e.message);
     }
@@ -116,8 +121,8 @@ function init(plugin) {
 
 
   tu.filter({
-      track: terms
-  }, function(_stream) {
+    track: terms
+  }, function (_stream) {
     stream = _stream;
     plugin.log(['plugin', 'info'], 'listening to twitter stream');
     stream.on('tweet', onTweet);
@@ -127,5 +132,5 @@ function init(plugin) {
 module.exports.init = init;
 
 module.exports.health = function () {
-  return lastRetweets.length;
+  return lastRetweets.length || retweetable;
 };

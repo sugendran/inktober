@@ -35,7 +35,8 @@ exports.register = function (plugin, options, next) {
         twitterProcessor: twitterProcessor.health(),
         flickrProcessor: flickrProcessor.health()
       };
-      var status = obj.uptime > 360000 && obj.twitter == 0 ? 500 : 200;
+      var status = obj.uptime > 360000 && obj.twitter === true ? 500 :
+        200;
       reply(obj).code(status);
     }
   });
