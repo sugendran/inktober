@@ -28,9 +28,9 @@ var _pauseTimeout = 0;
 function pauseRetweeting() {
   retweetable = false;
   clearTimeout(_pauseTimeout);
-  setTimeout(function () {
+  _pauseTimeout = setTimeout(function () {
     retweetable = true;
-  }, 40 * 60 * 1000);
+  }, 60 * 60 * 1000);
 }
 
 function init(plugin) {
