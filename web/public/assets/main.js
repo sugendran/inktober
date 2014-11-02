@@ -11,7 +11,9 @@
   var current_year = 2014;
   var before = Date.now();
   var after = Date.now() - TWO_HOURS;
-  var minDate = Date.UTC(current_year, 8, 1);
+  var minDate = Date.UTC(current_year, 8, 31);
+  var maxDate = Date.UTC(current_year, 10, 1);
+  before = Math.min(before, maxDate);
 
   var matches = window.location.search.match(/year=(\d+)/);
   if (matches != null) {
